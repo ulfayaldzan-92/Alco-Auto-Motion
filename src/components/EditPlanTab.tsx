@@ -97,13 +97,13 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
   const activeAlerts = liveAudit.recommendations.filter(r => r.severity === 'high' || r.severity === 'medium');
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-6">
+    <div className="mx-auto max-w-[1600px] space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       {/* Live Creative Performance Alert Bar */}
       {activeAlerts.length > 0 && (
-        <div className="bg-rose-50 border-2 border-rose-200 p-4 rounded-2xl shadow-xs flex flex-col gap-3 animate-fade-in">
+        <div className="flex flex-col gap-3 rounded-lg border border-rose-200 bg-rose-50 p-4 shadow-sm animate-fade-in">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center font-bold shadow-xs">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-500 font-bold text-white shadow-sm">
                 <AlertTriangle className="w-4 h-4 animate-pulse" />
               </div>
               <div>
@@ -133,7 +133,7 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
                 <div>
                   <p className="font-bold text-slate-800">{rec.title}</p>
                   <p className="text-[10px] text-slate-500">{rec.description}</p>
-                  <p className="text-[10px] font-semibold text-rose-600 mt-1">💡 Fix: {rec.actionableFix}</p>
+                  <p className="mt-1 text-[10px] font-semibold text-rose-600">Fix: {rec.actionableFix}</p>
                 </div>
               </div>
             ))}
@@ -142,10 +142,10 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
       )}
 
       {/* Top Action Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-2xl shadow-xs">
+      <div className="alco-card flex flex-col items-start justify-between gap-4 p-5 sm:flex-row sm:items-center">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
+            <span className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
               Editing Plan
             </span>
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${activeStyleProfile.badgeColor}`}>
@@ -161,11 +161,11 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
                 <Sun className="w-3 h-3 text-cyan-600" /> Lighting & Face Clarity Enhanced
               </span>
             )}
-            <span className="text-xs text-slate-500 font-mono">
-              {project.scenes.length} Scenes Identified • {project.total_duration}s Total
+            <span className="font-mono text-xs text-muted-foreground">
+              {project.scenes.length} Scenes Identified - {project.total_duration}s Total
             </span>
           </div>
-          <h2 className="text-base font-bold text-slate-900 tracking-tight mt-1">
+          <h2 className="mt-1 text-base font-black text-foreground">
             {project.title}
           </h2>
         </div>
@@ -175,7 +175,7 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
             type="button"
             disabled={isProcessing}
             onClick={onRegenerateAll}
-            className="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-semibold text-foreground transition-all hover:bg-secondary disabled:opacity-50 sm:flex-none"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
             <span>Re-analyze</span>
@@ -185,7 +185,7 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
             id="btn-open-export"
             type="button"
             onClick={onOpenExportModal}
-            className="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/95 sm:flex-none"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export Project</span>
@@ -194,72 +194,72 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
       </div>
 
       {/* Editing Grammar & Style Profile Breakdown Card */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg text-white space-y-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+      <div className="alco-card space-y-4 p-5">
+        <div className="flex flex-col items-start justify-between gap-3 border-b border-border pb-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 font-bold text-amber-700">
               <Layers className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold tracking-tight text-white">{activeStyleProfile.name}</h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                <h3 className="text-sm font-black text-foreground">{activeStyleProfile.name}</h3>
+                <span className="rounded border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
                   {activeStyleProfile.pacing.speedTag}
                 </span>
               </div>
-              <p className="text-xs text-slate-400">{activeStyleProfile.tagline}</p>
+              <p className="text-xs text-muted-foreground">{activeStyleProfile.tagline}</p>
             </div>
           </div>
         </div>
 
         {/* 6 Key Pillars Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
-          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-1">
-            <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px]">
+          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-700">
               <Zap className="w-3.5 h-3.5" /> Pacing
             </div>
-            <p className="font-semibold text-slate-200">{activeStyleProfile.pacing.cadenceRangeMs}</p>
-            <p className="text-[10px] text-slate-400 leading-tight">{activeStyleProfile.pacing.description}</p>
+            <p className="font-semibold text-foreground">{activeStyleProfile.pacing.cadenceRangeMs}</p>
+            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.pacing.description}</p>
           </div>
 
-          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-1">
-            <div className="flex items-center gap-1.5 text-indigo-400 font-bold text-[11px]">
+          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold text-primary">
               <Type className="w-3.5 h-3.5" /> Caption
             </div>
-            <p className="font-semibold text-slate-200">{activeStyleProfile.captionStyle.fontFamily.replace(/["',]/g, '')}</p>
-            <p className="text-[10px] text-slate-400 leading-tight">{activeStyleProfile.captionStyle.badgeFormat}</p>
+            <p className="font-semibold text-foreground">{activeStyleProfile.captionStyle.fontFamily.replace(/["',]/g, '')}</p>
+            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.captionStyle.badgeFormat}</p>
           </div>
 
-          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-1">
-            <div className="flex items-center gap-1.5 text-rose-400 font-bold text-[11px]">
+          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-600">
               <Move className="w-3.5 h-3.5" /> Motion
             </div>
-            <p className="font-semibold text-slate-200">{activeStyleProfile.motionIntensity.preset}</p>
-            <p className="text-[10px] text-slate-400 leading-tight">Hook Scale: {activeStyleProfile.motionIntensity.hookScale}x</p>
+            <p className="font-semibold text-foreground">{activeStyleProfile.motionIntensity.preset}</p>
+            <p className="text-[10px] leading-tight text-muted-foreground">Hook Scale: {activeStyleProfile.motionIntensity.hookScale}x</p>
           </div>
 
-          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-1">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
+          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-700">
               <Film className="w-3.5 h-3.5" /> B-Roll
             </div>
-            <p className="font-semibold text-slate-200">{activeStyleProfile.brollBehavior.density}</p>
-            <p className="text-[10px] text-slate-400 leading-tight">{activeStyleProfile.brollBehavior.description}</p>
+            <p className="font-semibold text-foreground">{activeStyleProfile.brollBehavior.density}</p>
+            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.brollBehavior.description}</p>
           </div>
 
-          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-1">
-            <div className="flex items-center gap-1.5 text-cyan-400 font-bold text-[11px]">
+          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold text-cyan-700">
               <ShieldCheck className="w-3.5 h-3.5" /> Proof
             </div>
-            <p className="font-semibold text-slate-200 truncate">{activeStyleProfile.proofVisual.primaryType}</p>
-            <p className="text-[10px] text-slate-400 leading-tight">{activeStyleProfile.proofVisual.badgeStyle}</p>
+            <p className="truncate font-semibold text-foreground">{activeStyleProfile.proofVisual.primaryType}</p>
+            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.proofVisual.badgeStyle}</p>
           </div>
 
-          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-1">
-            <div className="flex items-center gap-1.5 text-purple-400 font-bold text-[11px]">
+          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
+            <div className="flex items-center gap-1.5 text-[11px] font-bold text-violet-700">
               <Target className="w-3.5 h-3.5" /> CTA
             </div>
-            <p className="font-semibold text-slate-200 truncate">{activeStyleProfile.ctaTreatment.actionType}</p>
-            <p className="text-[10px] text-slate-400 leading-tight">{activeStyleProfile.ctaTreatment.pulseStyle}</p>
+            <p className="truncate font-semibold text-foreground">{activeStyleProfile.ctaTreatment.actionType}</p>
+            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.ctaTreatment.pulseStyle}</p>
           </div>
         </div>
       </div>

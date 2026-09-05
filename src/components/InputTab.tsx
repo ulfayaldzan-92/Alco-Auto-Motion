@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Upload, Film, FileText, Target, Zap, Play, Sparkles, CheckCircle2, AlertCircle, Clock, RefreshCw, Video, Check, RotateCcw } from 'lucide-react';
+import { Upload, Film, FileText, Target, Zap, Sparkles, CheckCircle2, RefreshCw, Video, Check, RotateCcw } from 'lucide-react';
 import { ContentType, SampleVideoOption, ProcessingState } from '../types';
 import { SAMPLE_VIDEOS } from '../data/sampleVideos';
 import { ApiKeyOnboardingCard } from './ApiKeyOnboardingCard';
@@ -67,60 +67,60 @@ export const InputTab: React.FC<InputTabProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 space-y-8">
+    <div className="mx-auto max-w-[1400px] space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       {/* BYO Gemini API Key Onboarding Card */}
       <ApiKeyOnboardingCard onOpenModal={onOpenApiKeyModal} />
 
       {/* Testing Goal Banner based on Blueprint */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-indigo-800/40 rounded-2xl p-5 shadow-xl">
+      <div className="alco-card p-5">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+              <span className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
                 Blueprint MVP Validation
               </span>
-              <h2 className="text-base font-semibold text-white">4 Kunci Pengujian Alco Auto Motion</h2>
+              <h2 className="text-base font-black text-foreground">4 Kunci Pengujian Alco Auto Motion</h2>
             </div>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-muted-foreground">
               Validasi pemahaman AI terhadap makna konten, segmentasi Hook/Problem/CTA, 6 motion camera presets, dynamic caption & auto B-roll.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2 text-[11px]">
-            <span className="px-2.5 py-1 bg-slate-800/90 text-slate-300 rounded-lg border border-slate-700">
-              ✓ AI Content Understanding
+            <span className="rounded-md border border-border bg-secondary px-2.5 py-1 text-slate-700">
+              AI Content Understanding
             </span>
-            <span className="px-2.5 py-1 bg-slate-800/90 text-slate-300 rounded-lg border border-slate-700">
-              ✓ Scene Segmentation
+            <span className="rounded-md border border-border bg-secondary px-2.5 py-1 text-slate-700">
+              Scene Segmentation
             </span>
-            <span className="px-2.5 py-1 bg-slate-800/90 text-slate-300 rounded-lg border border-slate-700">
-              ✓ 6 Motion Presets
+            <span className="rounded-md border border-border bg-secondary px-2.5 py-1 text-slate-700">
+              6 Motion Presets
             </span>
-            <span className="px-2.5 py-1 bg-slate-800/90 text-slate-300 rounded-lg border border-slate-700">
-              ✓ Dynamic Captions & B-Roll
+            <span className="rounded-md border border-border bg-secondary px-2.5 py-1 text-slate-700">
+              Dynamic Captions & B-Roll
             </span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Left Column: Video Input & Samples (6 Cols) */}
         <div className="lg:col-span-6 space-y-6">
           {/* Module 1: Video Upload & Preset Selector */}
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-md space-y-5">
+          <div className="alco-card space-y-5 p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-sm">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
                   1A
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider">Upload Video Mentah</h3>
-                  <p className="text-xs text-slate-400">MP4, 30–60 detik, format utama 9:16</p>
+                  <h3 className="text-sm font-black text-foreground">Upload Video Mentah</h3>
+                  <p className="text-xs text-muted-foreground">MP4, 30-60 detik, format utama 9:16</p>
                 </div>
               </div>
               {videoDuration > 0 && (
-                <span className="px-2.5 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-lg flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
                   {videoDuration}s Video Ready
                 </span>
               )}
@@ -128,20 +128,20 @@ export const InputTab: React.FC<InputTabProps> = ({
 
             {/* Custom Video Active / Restore Callout */}
             {uploadedFile && selectedSampleId !== 'custom' && (
-              <div className="bg-indigo-950/60 border border-indigo-500/40 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs animate-fade-in">
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/10 p-3.5 text-xs animate-fade-in">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-7 h-7 rounded-lg bg-indigo-600/30 text-indigo-300 flex items-center justify-center shrink-0">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                     <Video className="w-4 h-4" />
                   </div>
                   <div className="truncate">
-                    <p className="font-semibold text-white truncate">Video Upload Anda Tersimpan</p>
-                    <p className="text-[11px] text-indigo-200 truncate">{uploadedFile.name} ({(uploadedFile.size / (1024 * 1024)).toFixed(1)} MB)</p>
+                    <p className="truncate font-semibold text-foreground">Video Upload Anda Tersimpan</p>
+                    <p className="truncate text-[11px] text-muted-foreground">{uploadedFile.name} ({(uploadedFile.size / (1024 * 1024)).toFixed(1)} MB)</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={onRestoreUploadedFile}
-                  className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shrink-0 cursor-pointer transition-all shadow-xs flex items-center gap-1"
+                  className="flex shrink-0 cursor-pointer items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/95"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Gunakan Video Saya</span>
@@ -166,10 +166,10 @@ export const InputTab: React.FC<InputTabProps> = ({
               onClick={() => fileInputRef.current?.click()}
               className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
                 selectedSampleId === 'custom' && uploadedFile
-                  ? 'border-emerald-500/80 bg-emerald-950/20 shadow-xs'
+                  ? 'border-emerald-300 bg-emerald-50 shadow-xs'
                   : isDragOver
-                  ? 'border-indigo-400 bg-indigo-950/40'
-                  : 'border-slate-700 hover:border-slate-600 bg-slate-950/40 hover:bg-slate-950/60'
+                  ? 'border-primary bg-primary/10'
+                  : 'border-slate-300 bg-slate-50 hover:border-primary/60 hover:bg-primary/5'
               }`}
             >
               <input
@@ -188,8 +188,8 @@ export const InputTab: React.FC<InputTabProps> = ({
                 <div
                   className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
                     selectedSampleId === 'custom' && uploadedFile
-                      ? 'bg-emerald-900/40 text-emerald-400 border border-emerald-700/50'
-                      : 'bg-slate-800 text-indigo-400'
+                       ? 'border border-emerald-200 bg-emerald-100 text-emerald-700'
+                       : 'bg-secondary text-primary'
                   }`}
                 >
                   {selectedSampleId === 'custom' && uploadedFile ? (
@@ -199,17 +199,17 @@ export const InputTab: React.FC<InputTabProps> = ({
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-200">
+                  <p className="text-sm font-semibold text-foreground">
                     {selectedSampleId === 'custom' && uploadedFile
-                      ? `✓ ${uploadedFile.name}`
-                      : 'Klik untuk Upload atau Drag & Drop Video MP4'}
+                       ? uploadedFile.name
+                       : 'Klik untuk Upload atau Drag & Drop Video MP4'}
                   </p>
                   {selectedSampleId === 'custom' && uploadedFile ? (
-                    <p className="text-xs text-emerald-400 font-medium mt-0.5">
-                      Tersimpan aktif di sesi browser ({(uploadedFile.size / (1024 * 1024)).toFixed(1)} MB) • Klik untuk ganti
+                    <p className="mt-0.5 text-xs font-medium text-emerald-700">
+                      Tersimpan aktif di sesi browser ({(uploadedFile.size / (1024 * 1024)).toFixed(1)} MB) - Klik untuk ganti
                     </p>
                   ) : (
-                    <p className="text-xs text-slate-500">Maksimal 60 detik (Talking-head 9:16)</p>
+                    <p className="text-xs text-muted-foreground">Maksimal 60 detik (Talking-head 9:16)</p>
                   )}
                 </div>
               </div>
@@ -217,29 +217,29 @@ export const InputTab: React.FC<InputTabProps> = ({
 
             {/* Video Metadata specs if loaded */}
             {videoMeta && (
-              <div className="grid grid-cols-3 gap-2 bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 text-xs">
+              <div className="grid grid-cols-3 gap-2 rounded-lg border border-border bg-secondary p-3 text-xs">
                 <div>
-                  <span className="text-slate-500 block text-[10px]">DURASI</span>
-                  <span className="font-semibold text-slate-200">{videoDuration} Detik</span>
+                  <span className="block text-[10px] font-semibold text-muted-foreground">DURASI</span>
+                  <span className="font-semibold text-foreground">{videoDuration} Detik</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px]">RESOLUSI</span>
-                  <span className="font-semibold text-slate-200">
+                  <span className="block text-[10px] font-semibold text-muted-foreground">RESOLUSI</span>
+                  <span className="font-semibold text-foreground">
                     {videoMeta.width} x {videoMeta.height}
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px]">ASPECT RATIO</span>
-                  <span className="font-semibold text-amber-400">{videoMeta.aspect}</span>
+                  <span className="block text-[10px] font-semibold text-muted-foreground">ASPECT RATIO</span>
+                  <span className="font-semibold text-primary">{videoMeta.aspect}</span>
                 </div>
               </div>
             )}
 
             {/* Fast Test: Pre-loaded Demo Talking-Head Videos */}
-            <div className="space-y-3 pt-2 border-t border-slate-800">
+            <div className="space-y-3 border-t border-border pt-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <Film className="w-3.5 h-3.5 text-amber-400" />
+                <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                  <Film className="w-3.5 h-3.5 text-primary" />
                   Atau Pilih Demo Video Siap Uji (1-Click Test):
                 </span>
               </div>
@@ -250,24 +250,24 @@ export const InputTab: React.FC<InputTabProps> = ({
                     key={sample.id}
                     type="button"
                     onClick={() => onSelectSample(sample)}
-                    className={`text-left p-2.5 rounded-xl border transition-all relative overflow-hidden group cursor-pointer ${
+                    className={`group relative cursor-pointer overflow-hidden rounded-lg border p-2.5 text-left transition-all ${
                       selectedSampleId === sample.id
-                        ? 'border-indigo-500 bg-indigo-950/40 shadow-sm'
-                        : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
+                        ? 'border-primary bg-primary/10 shadow-sm'
+                        : 'border-border bg-card hover:border-primary/50 hover:bg-secondary'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                      <span className="text-[10px] font-bold uppercase text-primary">
                         {sample.contentType.replace('_', ' ')}
                       </span>
-                      <span className="text-[10px] text-slate-500">{sample.duration}s</span>
+                      <span className="text-[10px] text-muted-foreground">{sample.duration}s</span>
                     </div>
-                    <p className="text-xs font-medium text-slate-200 line-clamp-2 leading-tight">
+                    <p className="line-clamp-2 text-xs font-medium leading-tight text-foreground">
                       {sample.title}
                     </p>
                     {selectedSampleId === sample.id && (
                       <div className="absolute bottom-1 right-1">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
                       </div>
                     )}
                   </button>
@@ -277,15 +277,15 @@ export const InputTab: React.FC<InputTabProps> = ({
           </div>
 
           {/* Module 1B: Content Type Selection */}
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-md space-y-4">
+          <div className="alco-card space-y-4 p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-sm font-bold text-amber-700">
                   1B
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider">Pilih Gaya Editing (Editing Grammar)</h3>
-                  <p className="text-xs text-slate-400">AI mengatur pacing, intensitas kamera zoom, caption, dan density B-roll</p>
+                  <h3 className="text-sm font-black text-foreground">Pilih Gaya Editing (Editing Grammar)</h3>
+                  <p className="text-xs text-muted-foreground">AI mengatur pacing, intensitas kamera zoom, caption, dan density B-roll</p>
                 </div>
               </div>
             </div>
@@ -305,26 +305,26 @@ export const InputTab: React.FC<InputTabProps> = ({
                     key={item.id}
                     type="button"
                     onClick={() => setContentType(item.id as ContentType)}
-                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
+                    className={`relative cursor-pointer rounded-lg border p-3 text-left transition-all ${
                       isSelected
-                        ? 'border-amber-400 bg-amber-500/10 text-white shadow-md ring-1 ring-amber-400/40'
-                        : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                        ? 'border-primary bg-primary/10 text-foreground shadow-sm ring-1 ring-primary/20'
+                        : 'border-border bg-card text-muted-foreground hover:border-primary/50 hover:bg-secondary hover:text-foreground'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-slate-100">{item.label}</span>
+                      <span className="text-xs font-bold text-foreground">{item.label}</span>
                       <span
                         className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
                           isSelected
-                            ? 'border-amber-400 bg-amber-400'
-                            : 'border-slate-700'
+                            ? 'border-primary bg-primary'
+                            : 'border-slate-300'
                         }`}
                       >
-                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-slate-950" />}
+                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-400 leading-tight line-clamp-2">{item.desc}</p>
-                    <span className="inline-block mt-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-amber-300">
+                    <p className="line-clamp-2 text-[10px] leading-tight text-muted-foreground">{item.desc}</p>
+                    <span className="mt-2 inline-block rounded bg-accent/15 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">
                       {item.tag}
                     </span>
                   </button>
@@ -336,15 +336,15 @@ export const InputTab: React.FC<InputTabProps> = ({
 
         {/* Right Column: Script & Objectives (6 Cols) */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-md space-y-5">
+          <div className="alco-card space-y-5 p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-sm font-bold text-emerald-700">
                   1C
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider">Script & Tujuan Video</h3>
-                  <p className="text-xs text-slate-400">Transkripsi atau naskah dialog video</p>
+                  <h3 className="text-sm font-black text-foreground">Script & Tujuan Video</h3>
+                  <p className="text-xs text-muted-foreground">Transkripsi atau naskah dialog video</p>
                 </div>
               </div>
             </div>
@@ -352,25 +352,25 @@ export const InputTab: React.FC<InputTabProps> = ({
             {/* Script Textarea & Audio Mode Badge */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-indigo-400" />
+                <label className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                  <FileText className="w-3.5 h-3.5 text-primary" />
                   Script / Dialog Transkrip:
                 </label>
                 {videoFile ? (
-                  <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     Transkrip Suara Audio Asli Aktif
                   </span>
                 ) : (
-                  <span className="text-[10px] font-medium text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md">
+                  <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                     Mode Preset Script
                   </span>
                 )}
               </div>
               
               {videoFile && (
-                <div className="p-2.5 rounded-xl bg-indigo-950/40 border border-indigo-800/30 text-[11px] text-indigo-200/90 leading-relaxed flex items-start gap-2">
-                  <span className="text-sm shrink-0">🎙️</span>
+                <div className="flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/10 p-2.5 text-[11px] leading-relaxed text-slate-700">
+                  <span className="text-sm shrink-0">Audio</span>
                   <span>
                     <strong>Prioritas Audio Video:</strong> Sistem otomatis mengekstrak & mentranskripsi ucapan langsung dari suara asli video secara verbatim. Teks di bawah otomatis terupdate atau dapat digunakan sebagai konteks assist/fallback.
                   </span>
@@ -382,15 +382,15 @@ export const InputTab: React.FC<InputTabProps> = ({
                 onChange={(e) => setRawScript(e.target.value)}
                 placeholder={videoFile ? "Transkrip suara otomatis diekstrak saat generate, atau ketik naskah referensi disini..." : "Masukkan transkrip atau naskah video disini..."}
                 rows={videoFile ? 4 : 5}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono leading-relaxed resize-none"
+                className="w-full resize-none rounded-lg border border-border bg-secondary p-3 font-mono text-xs leading-relaxed text-foreground focus:border-primary focus:outline-none"
               />
             </div>
 
             {/* Optional Goal & CTA */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-300 flex items-center gap-1">
-                  <Target className="w-3 h-3 text-amber-400" />
+                <label className="flex items-center gap-1 text-[11px] font-semibold text-foreground">
+                  <Target className="w-3 h-3 text-accent" />
                   Tujuan Video (Opsional):
                 </label>
                 <input
@@ -398,13 +398,13 @@ export const InputTab: React.FC<InputTabProps> = ({
                   value={videoGoal}
                   onChange={(e) => setVideoGoal(e.target.value)}
                   placeholder="Misal: Validasi pasar sebelum bikin produk"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-slate-300 flex items-center gap-1">
-                  <Zap className="w-3 h-3 text-rose-400" />
+                <label className="flex items-center gap-1 text-[11px] font-semibold text-foreground">
+                  <Zap className="w-3 h-3 text-primary" />
                   CTA Video (Opsional):
                 </label>
                 <input
@@ -412,14 +412,14 @@ export const InputTab: React.FC<InputTabProps> = ({
                   value={ctaText}
                   onChange={(e) => setCtaText(e.target.value)}
                   placeholder="Misal: Klik link di bio / Keranjang kuning"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Testing Phase Selector from Blueprint */}
-            <div className="pt-3 border-t border-slate-800 space-y-2">
-              <span className="text-xs font-semibold text-slate-300 block">
+            <div className="space-y-2 border-t border-border pt-3">
+              <span className="block text-xs font-semibold text-foreground">
                 Fase Pengujian (Testing Level):
               </span>
               <div className="grid grid-cols-2 gap-2 text-xs">
@@ -433,14 +433,14 @@ export const InputTab: React.FC<InputTabProps> = ({
                     key={item.phase}
                     type="button"
                     onClick={() => setActiveTestingPhase(item.phase)}
-                    className={`p-2 rounded-lg border text-left transition-all ${
+                    className={`rounded-lg border p-2 text-left transition-all ${
                       activeTestingPhase === item.phase
-                        ? 'border-indigo-500 bg-indigo-500/20 text-indigo-200'
-                        : 'border-slate-800/80 bg-slate-950/30 text-slate-400 hover:border-slate-700'
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-border bg-card text-muted-foreground hover:border-primary/50 hover:bg-secondary'
                     }`}
                   >
                     <div className="font-semibold text-[11px]">{item.title}</div>
-                    <div className="text-[10px] text-slate-500">{item.sub}</div>
+                    <div className="text-[10px] text-muted-foreground">{item.sub}</div>
                   </button>
                 ))}
               </div>
@@ -453,7 +453,7 @@ export const InputTab: React.FC<InputTabProps> = ({
                 type="button"
                 disabled={isProcessing}
                 onClick={() => onStartAnalysis()}
-                className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all transform active:scale-[0.99] disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 text-sm font-bold text-primary-foreground shadow-sm transition-all active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-75"
               >
                 {isProcessing ? (
                   <div className="flex items-center gap-2">
@@ -472,23 +472,23 @@ export const InputTab: React.FC<InputTabProps> = ({
 
               {/* Inline Progress Strip if running */}
               {isProcessing && (
-                <div className="bg-slate-950/90 border border-indigo-900/60 rounded-xl p-3 space-y-2 text-xs animate-fade-in">
+                <div className="space-y-2 rounded-lg border border-primary/20 bg-primary/10 p-3 text-xs animate-fade-in">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-300 font-medium flex items-center gap-1.5 text-[11px]">
-                      <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping" />
+                    <span className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700">
+                      <span className="h-2 w-2 rounded-full bg-primary animate-ping" />
                       {activeStep?.subtitle || 'Menganalisis pacing video...'}
                     </span>
-                    <span className="text-amber-400 font-mono text-[11px] font-bold">
+                    <span className="font-mono text-[11px] font-bold text-primary">
                       {Math.round(processingState.overallProgress)}%
                     </span>
                   </div>
-                  <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full border border-border bg-card">
                     <div
-                      className="bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 h-full rounded-full transition-all duration-300"
+                      className="h-full rounded-full bg-primary transition-all duration-300"
                       style={{ width: `${Math.min(100, Math.max(5, processingState.overallProgress))}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+                  <div className="flex justify-between font-mono text-[10px] text-muted-foreground">
                     <span>Tahap: {activeStep?.id || 'Analisis'}</span>
                     <span>Waktu: {(processingState.elapsedMs / 1000).toFixed(1)}s</span>
                   </div>

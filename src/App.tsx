@@ -133,7 +133,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="app-shell flex flex-col font-sans selection:bg-primary selection:text-primary-foreground">
       {/* Top Header */}
       <Header
         activeTab={activeTab}
@@ -159,7 +159,7 @@ export default function App() {
       />
 
       {/* Main Tab Content */}
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-12">
         {activeTab === 'input' && (
           <InputTab
             contentType={contentType}
@@ -219,4 +219,3 @@ export default function App() {
     </div>
   );
 }
-
