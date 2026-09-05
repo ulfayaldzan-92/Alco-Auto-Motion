@@ -3,7 +3,21 @@ import { AlcoEditingProject, SceneEditPlan } from '../types';
 import { PreviewPlayer } from './PreviewPlayer';
 import { TimelineView } from './TimelineView';
 import { SceneInspector } from './SceneInspector';
-import { Download, Sparkles, SlidersHorizontal, RefreshCw, Layers, Zap, Type, Move, Film, ShieldCheck, Target, UserCheck, Sun, AlertTriangle } from 'lucide-react';
+import {
+  Download,
+  Sparkles,
+  RefreshCw,
+  Layers,
+  Zap,
+  Type,
+  Move,
+  Film,
+  ShieldCheck,
+  Target,
+  UserCheck,
+  Sun,
+  AlertTriangle,
+} from 'lucide-react';
 import { getApiHeaders } from '../services/apiKeyService';
 import { getStyleProfile } from '../engine/styleProfiles';
 import { validateCreativePerformance } from '../engine/creativeValidator';
@@ -68,7 +82,9 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
 
       if (!res.ok) {
         let text = '';
-        try { text = await res.text(); } catch {}
+        try {
+          text = await res.text();
+        } catch {}
         if (text && text.length < 200 && !text.includes('<!doctype') && !text.includes('<html')) {
           throw new Error(text);
         }
@@ -94,88 +110,42 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
 
   const currentScene = project.scenes[activeSceneIndex] || project.scenes[0];
   const liveAudit = validateCreativePerformance(project);
-  const activeAlerts = liveAudit.recommendations.filter(r => r.severity === 'high' || r.severity === 'medium');
+  const activeAlerts = liveAudit.recommendations.filter(
+    (r) => r.severity === 'high' || r.severity === 'medium'
+  );
 
   return (
-    <div className="mx-auto max-w-[1600px] space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-      {/* Live Creative Performance Alert Bar */}
-      {activeAlerts.length > 0 && (
-        <div className="flex flex-col gap-3 rounded-lg border border-rose-200 bg-rose-50 p-4 shadow-sm animate-fade-in">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-500 font-bold text-white shadow-sm">
-                <AlertTriangle className="w-4 h-4 animate-pulse" />
-              </div>
-              <div>
-                <h3 className="text-xs font-black text-rose-950 uppercase tracking-wider">
-                  Live Marketing Quality Warnings ({activeAlerts.length})
-                </h3>
-                <p className="text-[10px] text-rose-700 font-medium">
-                  Sistem mendeteksi {activeAlerts.length} elemen video yang kurang optimal secara marketing. Perbaiki agar retensi penonton maksimal!
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="text-[11px] font-black bg-rose-100 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
-                Performance Score: {liveAudit.overallScore}/100 ({liveAudit.grade})
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            {activeAlerts.slice(0, 4).map((rec) => (
-              <div key={rec.id} className="bg-white/80 p-2.5 rounded-xl border border-rose-100/80 flex items-start gap-2 text-xs">
-                <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase shrink-0 mt-0.5 ${
-                  rec.severity === 'high' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
-                }`}>
-                  {rec.severity}
-                </span>
-                <div>
-                  <p className="font-bold text-slate-800">{rec.title}</p>
-                  <p className="text-[10px] text-slate-500">{rec.description}</p>
-                  <p className="mt-1 text-[10px] font-semibold text-rose-600">Fix: {rec.actionableFix}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
+    <div className="mx-auto max-w-[1600px] space-y-5 px-4 py-5 sm:px-6 lg:px-8">
       {/* Top Action Bar */}
-      <div className="alco-card flex flex-col items-start justify-between gap-4 p-5 sm:flex-row sm:items-center">
+      <div className="alco-card p-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-              Editing Plan
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded bg-primary/10 px-2 py-0.5 text-[11px] font-bold text-primary border border-primary/20">
+              EDITING WORKSPACE
             </span>
-            <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${activeStyleProfile.badgeColor}`}>
+            <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${activeStyleProfile.badgeColor}`}>
               Style: {activeStyleProfile.name}
             </span>
             {project.talking_head_summary?.dominant && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 flex items-center gap-1">
-                <UserCheck className="w-3 h-3 text-emerald-600" /> Talking Head Eyeline Locked
-              </span>
-            )}
-            {project.visual_quality_summary && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/15 text-cyan-700 border border-cyan-500/30 flex items-center gap-1">
-                <Sun className="w-3 h-3 text-cyan-600" /> Lighting & Face Clarity Enhanced
+              <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                <UserCheck className="w-3 h-3" /> Eyeline Locked
               </span>
             )}
             <span className="font-mono text-xs text-muted-foreground">
-              {project.scenes.length} Scenes Identified - {project.total_duration}s Total
+              {project.scenes.length} Scenes ({project.total_duration}s)
             </span>
           </div>
-          <h2 className="mt-1 text-base font-black text-foreground">
+          <h2 className="mt-1 text-sm font-bold text-foreground truncate max-w-xl">
             {project.title}
           </h2>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <button
             type="button"
             disabled={isProcessing}
             onClick={onRegenerateAll}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-semibold text-foreground transition-all hover:bg-secondary disabled:opacity-50 sm:flex-none"
+            className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-lg border border-border bg-secondary px-3.5 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary/80 transition-colors cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
             <span>Re-analyze</span>
@@ -185,7 +155,7 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
             id="btn-open-export"
             type="button"
             onClick={onOpenExportModal}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/95 sm:flex-none"
+            className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-lg bg-primary px-4 py-1.5 text-xs font-bold text-primary-foreground hover:bg-primary/95 shadow-xs transition-colors cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export Project</span>
@@ -193,80 +163,31 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
         </div>
       </div>
 
-      {/* Editing Grammar & Style Profile Breakdown Card */}
-      <div className="alco-card space-y-4 p-5">
-        <div className="flex flex-col items-start justify-between gap-3 border-b border-border pb-3 sm:flex-row sm:items-center">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 font-bold text-amber-700">
-              <Layers className="w-4 h-4" />
+      {/* Optional Marketing Quality Warning */}
+      {activeAlerts.length > 0 && (
+        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>Marketing Performance Note ({activeAlerts.length} Warnings)</span>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-black text-foreground">{activeStyleProfile.name}</h3>
-                <span className="rounded border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                  {activeStyleProfile.pacing.speedTag}
-                </span>
+            <span className="font-mono text-[11px] text-amber-600 dark:text-amber-400">
+              Score: {liveAudit.overallScore}/100 ({liveAudit.grade})
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-muted-foreground">
+            {activeAlerts.slice(0, 2).map((a) => (
+              <div key={a.id} className="rounded bg-card/60 p-2 border border-border">
+                <span className="font-semibold text-foreground">{a.title}:</span> {a.description}
               </div>
-              <p className="text-xs text-muted-foreground">{activeStyleProfile.tagline}</p>
-            </div>
+            ))}
           </div>
         </div>
+      )}
 
-        {/* 6 Key Pillars Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
-          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-700">
-              <Zap className="w-3.5 h-3.5" /> Pacing
-            </div>
-            <p className="font-semibold text-foreground">{activeStyleProfile.pacing.cadenceRangeMs}</p>
-            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.pacing.description}</p>
-          </div>
-
-          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-primary">
-              <Type className="w-3.5 h-3.5" /> Caption
-            </div>
-            <p className="font-semibold text-foreground">{activeStyleProfile.captionStyle.fontFamily.replace(/["',]/g, '')}</p>
-            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.captionStyle.badgeFormat}</p>
-          </div>
-
-          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-600">
-              <Move className="w-3.5 h-3.5" /> Motion
-            </div>
-            <p className="font-semibold text-foreground">{activeStyleProfile.motionIntensity.preset}</p>
-            <p className="text-[10px] leading-tight text-muted-foreground">Hook Scale: {activeStyleProfile.motionIntensity.hookScale}x</p>
-          </div>
-
-          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-700">
-              <Film className="w-3.5 h-3.5" /> B-Roll
-            </div>
-            <p className="font-semibold text-foreground">{activeStyleProfile.brollBehavior.density}</p>
-            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.brollBehavior.description}</p>
-          </div>
-
-          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-cyan-700">
-              <ShieldCheck className="w-3.5 h-3.5" /> Proof
-            </div>
-            <p className="truncate font-semibold text-foreground">{activeStyleProfile.proofVisual.primaryType}</p>
-            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.proofVisual.badgeStyle}</p>
-          </div>
-
-          <div className="space-y-1 rounded-lg border border-border bg-secondary p-3">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-violet-700">
-              <Target className="w-3.5 h-3.5" /> CTA
-            </div>
-            <p className="truncate font-semibold text-foreground">{activeStyleProfile.ctaTreatment.actionType}</p>
-            <p className="text-[10px] leading-tight text-muted-foreground">{activeStyleProfile.ctaTreatment.pulseStyle}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main 2-Column Editing Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: 9:16 Preview Player (5 Cols) */}
+      {/* Main 2-Column Editing Layout: Left: Preview Player, Right: Scene Inspector */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Left Column: Video Preview Monitor (5 Cols) */}
         <div className="lg:col-span-5 flex flex-col items-center">
           <PreviewPlayer
             videoUrl={videoUrl}
@@ -285,31 +206,8 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
           />
         </div>
 
-        {/* Right Column: Scene Timeline & Scene Inspector (7 Cols) */}
-
-        {/* Right Column: Scene Timeline & Scene Inspector (7 Cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Timeline Bar */}
-          <TimelineView
-            scenes={project.scenes}
-            currentTime={currentTime}
-            duration={project.total_duration}
-            activeSceneIndex={activeSceneIndex}
-            onSelectScene={(idx) => {
-              setActiveSceneIndex(idx);
-              const targetScene = project.scenes[idx];
-              if (targetScene) {
-                setCurrentTime(targetScene.start);
-              }
-            }}
-            onSeek={(t) => {
-              setCurrentTime(t);
-              const sIdx = project.scenes.findIndex((s) => t >= s.start && t < s.end);
-              if (sIdx !== -1) setActiveSceneIndex(sIdx);
-            }}
-          />
-
-          {/* Scene Inspector for Selected Scene */}
+        {/* Right Column: Property Inspector (7 Cols) */}
+        <div className="lg:col-span-7">
           <SceneInspector
             scene={currentScene}
             sceneIndex={activeSceneIndex}
@@ -319,6 +217,26 @@ export const EditPlanTab: React.FC<EditPlanTabProps> = ({
           />
         </div>
       </div>
+
+      {/* Full-Width Sequence Timeline across bottom */}
+      <TimelineView
+        scenes={project.scenes}
+        currentTime={currentTime}
+        duration={project.total_duration}
+        activeSceneIndex={activeSceneIndex}
+        onSelectScene={(idx) => {
+          setActiveSceneIndex(idx);
+          const targetScene = project.scenes[idx];
+          if (targetScene) {
+            setCurrentTime(targetScene.start);
+          }
+        }}
+        onSeek={(t) => {
+          setCurrentTime(t);
+          const sIdx = project.scenes.findIndex((s) => t >= s.start && t < s.end);
+          if (sIdx !== -1) setActiveSceneIndex(sIdx);
+        }}
+      />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
 import { InputTab } from './components/InputTab';
 import { AiAnalysisTab } from './components/AiAnalysisTab';
 import { EditPlanTab } from './components/EditPlanTab';
@@ -31,6 +32,23 @@ export default function App() {
   const [project, setProject] = useState<AlcoEditingProject | null>(null);
   const [isExportModalOpen, setIsExportModalOpen] = useState<boolean>(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('alco_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleToggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('alco_sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   // Helper to handle custom file upload with safe object URL lifecycle & session storage
   const handleUploadCustomFile = (file: File) => {
@@ -133,89 +151,106 @@ export default function App() {
   }, []);
 
   return (
-    <div className="app-shell flex flex-col font-sans selection:bg-primary selection:text-primary-foreground">
-      {/* Top Header */}
-      <Header
+    <div className="app-shell flex h-screen w-screen overflow-hidden font-sans bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
+      {/* Collapsible ALCO Desktop Sidebar */}
+      <Sidebar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         hasPlan={!!project}
-        isProcessing={processingState.isProcessing}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={handleToggleSidebar}
+        onOpenExportModal={project ? () => setIsExportModalOpen(true) : undefined}
         onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+        isProcessing={processingState.isProcessing}
       />
 
-      {/* Real-time Multi-Step AI Processing Modal */}
-      {processingState.isProcessing && (
-        <AiProcessingModal
-          state={processingState}
-          onRetry={retryLast}
-          onClose={dismissError}
+      {/* Main Workspace Area: Sticky Top Header + Scrollable Content */}
+      <div className="flex flex-1 flex-col min-w-0 h-full overflow-hidden">
+        <Header
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
+          hasPlan={!!project}
+          isProcessing={processingState.isProcessing}
+          onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+          onOpenExportModal={project ? () => setIsExportModalOpen(true) : undefined}
+          onToggleSidebar={handleToggleSidebar}
+          isSidebarCollapsed={isSidebarCollapsed}
         />
-      )}
 
-      {/* Gemini BYO API Key Configuration Modal */}
-      <ApiKeyModal
-        isOpen={isApiKeyModalOpen}
-        onClose={() => setIsApiKeyModalOpen(false)}
-      />
-
-      {/* Main Tab Content */}
-      <main className="flex-1 pb-12">
-        {activeTab === 'input' && (
-          <InputTab
-            contentType={contentType}
-            setContentType={setContentType}
-            rawScript={rawScript}
-            setRawScript={setRawScript}
-            videoGoal={videoGoal}
-            setVideoGoal={setVideoGoal}
-            ctaText={ctaText}
-            setCtaText={setCtaText}
-            videoUrl={videoUrl}
-            videoFile={videoFile}
-            uploadedFile={uploadedFile}
-            uploadedUrl={uploadedUrl}
-            selectedSampleId={selectedSampleId}
-            onSelectSample={handleSelectSample}
-            onUploadCustomFile={handleUploadCustomFile}
-            onRestoreUploadedFile={handleRestoreUploadedFile}
-            videoDuration={videoDuration}
-            setVideoDuration={setVideoDuration}
-            videoMeta={videoMeta}
-            setVideoMeta={setVideoMeta}
-            onStartAnalysis={(sample) => runAnalysis(sample)}
-            processingState={processingState}
-            onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+        {/* Real-time Multi-Step AI Processing Modal */}
+        {processingState.isProcessing && (
+          <AiProcessingModal
+            state={processingState}
+            onRetry={retryLast}
+            onClose={dismissError}
           />
         )}
 
-        {activeTab === 'analysis' && (
-          <AiAnalysisTab
-            project={project}
-            onProceedToPreview={() => setActiveTab('edit_preview')}
-          />
-        )}
+        {/* Gemini BYO API Key Configuration Modal */}
+        <ApiKeyModal
+          isOpen={isApiKeyModalOpen}
+          onClose={() => setIsApiKeyModalOpen(false)}
+        />
 
-        {activeTab === 'edit_preview' && project && (
-          <EditPlanTab
+        {/* Main Tab Content */}
+        <main className="flex-1 overflow-y-auto custom-scrollbar pb-10">
+          {activeTab === 'input' && (
+            <InputTab
+              contentType={contentType}
+              setContentType={setContentType}
+              rawScript={rawScript}
+              setRawScript={setRawScript}
+              videoGoal={videoGoal}
+              setVideoGoal={setVideoGoal}
+              ctaText={ctaText}
+              setCtaText={setCtaText}
+              videoUrl={videoUrl}
+              videoFile={videoFile}
+              uploadedFile={uploadedFile}
+              uploadedUrl={uploadedUrl}
+              selectedSampleId={selectedSampleId}
+              onSelectSample={handleSelectSample}
+              onUploadCustomFile={handleUploadCustomFile}
+              onRestoreUploadedFile={handleRestoreUploadedFile}
+              videoDuration={videoDuration}
+              setVideoDuration={setVideoDuration}
+              videoMeta={videoMeta}
+              setVideoMeta={setVideoMeta}
+              onStartAnalysis={(sample) => runAnalysis(sample)}
+              processingState={processingState}
+              onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+            />
+          )}
+
+          {activeTab === 'analysis' && (
+            <AiAnalysisTab
+              project={project}
+              onProceedToPreview={() => setActiveTab('edit_preview')}
+            />
+          )}
+
+          {activeTab === 'edit_preview' && project && (
+            <EditPlanTab
+              project={project}
+              videoUrl={project.raw_video_url || videoUrl}
+              onUpdateProject={setProject}
+              onOpenExportModal={() => setIsExportModalOpen(true)}
+              onRegenerateAll={() => runAnalysis()}
+              isProcessing={processingState.isProcessing}
+            />
+          )}
+        </main>
+
+        {/* Export Modal */}
+        {project && (
+          <ExportModal
+            isOpen={isExportModalOpen}
+            onClose={() => setIsExportModalOpen(false)}
             project={project}
             videoUrl={project.raw_video_url || videoUrl}
-            onUpdateProject={setProject}
-            onOpenExportModal={() => setIsExportModalOpen(true)}
-            onRegenerateAll={() => runAnalysis()}
-            isProcessing={processingState.isProcessing}
           />
         )}
-      </main>
-
-      {/* Export Modal */}
-      {project && (
-        <ExportModal
-          isOpen={isExportModalOpen}
-          onClose={() => setIsExportModalOpen(false)}
-          project={project}
-          videoUrl={project.raw_video_url || videoUrl}
-        />
-      )}
+      </div>
     </div>
   );
 }

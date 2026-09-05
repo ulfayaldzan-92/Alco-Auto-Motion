@@ -22,14 +22,13 @@ import {
   Trash2,
   Flame,
   ShieldAlert,
-  Sliders,
   Play,
   Layers,
   Zap,
-  UserCheck,
+  SlidersHorizontal,
   Eye,
-  ShieldCheck,
   Sun,
+  CheckCircle,
 } from 'lucide-react';
 
 interface SceneInspectorProps {
@@ -41,18 +40,18 @@ interface SceneInspectorProps {
 }
 
 const MOTION_OPTIONS: { id: MotionPreset; label: string; desc: string }[] = [
-  { id: 'normal', label: '01 NORMAL', desc: '1.0x baseline steady camera' },
-  { id: 'slow_zoom_in', label: '02 SLOW_ZOOM_IN', desc: 'Slow push-in (1.0 -> 1.12x)' },
-  { id: 'slow_zoom_out', label: '03 SLOW_ZOOM_OUT', desc: 'Slow pull-out (1.12 -> 1.0x)' },
-  { id: 'punch_zoom', label: '04 PUNCH_ZOOM', desc: 'Instant punch zoom (1.18 - 1.25x)' },
-  { id: 'pan_left', label: '05 PAN_LEFT', desc: 'Cinematic dynamic pan left' },
-  { id: 'pan_right', label: '06 PAN_RIGHT', desc: 'Cinematic dynamic pan right' },
+  { id: 'normal', label: '01 NORMAL', desc: '1.0x baseline steady' },
+  { id: 'slow_zoom_in', label: '02 SLOW ZOOM IN', desc: 'Slow push-in (1.0 -> 1.12x)' },
+  { id: 'slow_zoom_out', label: '03 SLOW ZOOM OUT', desc: 'Slow pull-out (1.12 -> 1.0x)' },
+  { id: 'punch_zoom', label: '04 PUNCH ZOOM', desc: 'Instant punch (1.20x)' },
+  { id: 'pan_left', label: '05 PAN LEFT', desc: 'Dynamic pan left' },
+  { id: 'pan_right', label: '06 PAN RIGHT', desc: 'Dynamic pan right' },
 ];
 
-const CAPTION_OPTIONS: { id: CaptionPreset; label: string; desc: string }[] = [
-  { id: 'hook', label: 'HOOK BADGE', desc: 'Giant high-contrast boxed badge' },
-  { id: 'highlight', label: 'HIGHLIGHT', desc: 'Dynamic yellow/cyan word emphasis' },
-  { id: 'normal', label: 'NORMAL', desc: 'Clean readable frosted pill' },
+const CAPTION_OPTIONS: { id: CaptionPreset; label: string }[] = [
+  { id: 'hook', label: 'Hook Badge' },
+  { id: 'highlight', label: 'Highlight' },
+  { id: 'normal', label: 'Normal Clean' },
 ];
 
 const VISUAL_INTENTS: { id: VisualIntent; label: string }[] = [
@@ -81,8 +80,8 @@ export const SceneInspector: React.FC<SceneInspectorProps> = ({
 
   if (!scene) {
     return (
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 text-center text-slate-500 shadow-xs">
-        Pilih scene pada timeline untuk menginspeksi dan menyetel keputusan AI Director.
+      <div className="alco-card p-6 text-center text-xs text-muted-foreground">
+        Pilih scene pada timeline untuk menginspeksi dan menyetel properti scene.
       </div>
     );
   }
@@ -180,522 +179,343 @@ export const SceneInspector: React.FC<SceneInspectorProps> = ({
   });
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-6">
-      {/* Header with Scene info & Intelligence Metrics */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center">
-              #{sceneIndex + 1}
-            </span>
-            <h3 className="text-sm font-bold text-slate-900 tracking-tight">
-              Scene {sceneIndex + 1} Intelligence Inspector
+    <div className="alco-card p-5 space-y-5">
+      {/* Property Inspector Header */}
+      <div className="flex items-center justify-between border-b border-border pb-3.5">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-6 w-6 items-center justify-center rounded bg-primary text-xs font-black text-primary-foreground">
+            #{sceneIndex + 1}
+          </span>
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Scene Inspector
             </h3>
+            <p className="font-mono text-[11px] text-primary">
+              {scene.start.toFixed(2)}s - {scene.end.toFixed(2)}s ({(scene.end - scene.start).toFixed(1)}s)
+            </p>
           </div>
-          <p className="text-xs font-mono text-indigo-600 mt-0.5">
-            {scene.start.toFixed(2)}s — {scene.end.toFixed(2)}s (Duration: {(scene.end - scene.start).toFixed(1)}s)
-          </p>
         </div>
 
-        {/* AI Director Note */}
-        {scene.director_note && (
-          <div className="sm:text-right max-w-sm">
-            <span className="text-[10px] text-slate-400 uppercase font-semibold">AI Rationale:</span>
-            <p className="text-[11px] text-slate-600 italic line-clamp-2">"{scene.director_note}"</p>
+        {/* Compact Quality Pills */}
+        <div className="flex items-center gap-2 text-[10px] font-mono">
+          <span className="flex items-center gap-1 rounded border border-border bg-secondary px-2 py-0.5 text-foreground">
+            <Flame className="w-3 h-3 text-rose-500" /> {scores.hook_strength}%
+          </span>
+          <span className="flex items-center gap-1 rounded border border-border bg-secondary px-2 py-0.5 text-foreground">
+            <Zap className="w-3 h-3 text-primary" /> {scores.emotional_intensity}/10
+          </span>
+        </div>
+      </div>
+
+      {/* 1. SCENE */}
+      <div className="space-y-2">
+        <div className="alco-section-label">
+          <SlidersHorizontal className="w-3.5 h-3.5 text-primary" />
+          <span>Scene Role</span>
+        </div>
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+          {ROLE_OPTIONS.map((role) => (
+            <button
+              key={role}
+              type="button"
+              onClick={() => handleRoleChange(role)}
+              className={`py-1.5 px-2 rounded text-[11px] font-bold uppercase transition-all cursor-pointer ${
+                scene.role === role
+                  ? 'bg-primary text-primary-foreground shadow-xs'
+                  : 'bg-secondary border border-border text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {role}
+            </button>
+          ))}
+        </div>
+
+        {/* Talking Head Eyeline Status if detected */}
+        {scene.talking_head_framing && (
+          <div className="flex items-center justify-between rounded border border-border bg-secondary/50 px-2.5 py-1.5 text-[11px]">
+            <span className="flex items-center gap-1.5 text-foreground font-semibold">
+              <Eye className="w-3.5 h-3.5 text-emerald-500" />
+              Eyeline Protection ({scene.talking_head_framing.eyeline_y_percent}%)
+            </span>
+            <span className="font-mono text-[10px] text-muted-foreground">
+              {scene.talking_head_framing.framing_mode.replace('_', ' ')} ({scene.talking_head_framing.smart_reframe_scale}x)
+            </span>
           </div>
         )}
       </div>
 
-      {/* Intelligence Score Meters Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-[10px]">
-            <span className="font-semibold text-slate-600 flex items-center gap-1">
-              <Flame className="w-3 h-3 text-rose-500" /> Hook Strength
-            </span>
-            <span className="font-mono font-bold text-slate-900">{scores.hook_strength}%</span>
+      {/* 2. CAPTION */}
+      <div className="space-y-2.5 pt-2 border-t border-border">
+        <div className="flex items-center justify-between">
+          <div className="alco-section-label !mb-0">
+            <Type className="w-3.5 h-3.5 text-primary" />
+            <span>Caption</span>
           </div>
-          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full ${
-                scores.hook_strength >= 80 ? 'bg-emerald-500' : 'bg-amber-500'
+          {/* Mode switch */}
+          <div className="flex items-center gap-1 rounded bg-secondary p-0.5 text-[10px]">
+            {(['verbatim', 'punchy', 'summary'] as CaptionMode[]).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => handleCaptionModeChange(mode)}
+                className={`px-2 py-0.5 rounded font-bold capitalize cursor-pointer transition-colors ${
+                  scene.caption_mode === mode
+                    ? 'bg-card text-primary shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Caption Text Input */}
+        <input
+          type="text"
+          value={scene.caption}
+          onChange={(e) => handleCaptionTextChange(e.target.value)}
+          placeholder="Caption text displayed on screen..."
+          className="w-full rounded border border-border bg-secondary px-3 py-2 text-xs font-semibold uppercase text-foreground focus:border-primary focus:outline-none"
+        />
+
+        {/* Caption Style Preset */}
+        <div className="grid grid-cols-3 gap-1.5">
+          {CAPTION_OPTIONS.map((cOpt) => (
+            <button
+              key={cOpt.id}
+              type="button"
+              onClick={() => handleCaptionStyleChange(cOpt.id)}
+              className={`py-1.5 px-2 rounded text-[11px] font-semibold text-center transition-all cursor-pointer ${
+                scene.caption_style === cOpt.id
+                  ? 'border border-primary bg-primary/10 text-primary font-bold'
+                  : 'border border-border bg-card text-muted-foreground hover:bg-secondary'
               }`}
-              style={{ width: `${scores.hook_strength}%` }}
-            />
-          </div>
+            >
+              {cOpt.label}
+            </button>
+          ))}
         </div>
 
+        {/* Highlight words */}
         <div className="space-y-1">
-          <div className="flex items-center justify-between text-[10px]">
-            <span className="font-semibold text-slate-600 flex items-center gap-1">
-              <ShieldAlert className="w-3 h-3 text-amber-500" /> Fatigue Risk
-            </span>
-            <span className="font-mono font-bold text-slate-900">{scores.visual_fatigue_risk}%</span>
-          </div>
-          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full ${
-                scores.visual_fatigue_risk > 50 ? 'bg-rose-500' : 'bg-emerald-500'
-              }`}
-              style={{ width: `${scores.visual_fatigue_risk}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-[10px]">
-            <span className="font-semibold text-slate-600 flex items-center gap-1">
-              <Zap className="w-3 h-3 text-indigo-500" /> Emotional Energy
-            </span>
-            <span className="font-mono font-bold text-slate-900">{scores.emotional_intensity}/10</span>
-          </div>
-          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-indigo-500 rounded-full"
-              style={{ width: `${scores.emotional_intensity * 10}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-[10px]">
-            <span className="font-semibold text-slate-600 flex items-center gap-1">
-              <Sliders className="w-3 h-3 text-slate-500" /> Urgency
-            </span>
-            <span className="font-mono font-bold text-slate-900">{scores.urgency_level}/10</span>
-          </div>
-          <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-amber-500 rounded-full"
-              style={{ width: `${scores.urgency_level * 10}%` }}
-            />
-          </div>
+          <span className="text-[10px] font-semibold text-muted-foreground uppercase">
+            Kata Penekanan (Highlight Words):
+          </span>
+          <input
+            type="text"
+            value={(scene.highlight_words || []).join(', ')}
+            onChange={(e) => handleHighlightWordsChange(e.target.value)}
+            placeholder="PRODUK, CEPAT, SOLUSI (pisahkan koma)"
+            className="w-full rounded border border-border bg-secondary px-2.5 py-1.5 text-xs font-semibold text-primary focus:border-primary focus:outline-none"
+          />
         </div>
       </div>
 
-      {/* Talking Head Intelligence & Eyeline Safeguards Banner */}
-      {scene.talking_head_framing && (
-        <div className="bg-gradient-to-r from-slate-900 to-indigo-950 border border-indigo-800/60 rounded-xl p-3 text-white space-y-2 text-xs">
-          <div className="flex items-center justify-between border-b border-indigo-800/40 pb-2">
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                <UserCheck className="w-3.5 h-3.5" />
-              </span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-slate-100">Talking Head Intelligence</span>
-                  <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase ${
-                    scene.talking_head_framing.protection_status === 'SAFE_FALLBACK'
-                      ? 'bg-slate-800 text-slate-300 border border-slate-700'
-                      : 'bg-emerald-950 text-emerald-300 border border-emerald-700/60'
-                  }`}>
-                    {scene.talking_head_framing.protection_status.replace('_', ' ')}
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-300">{scene.talking_head_framing.note}</p>
-              </div>
-            </div>
-
-            <span className="text-[10px] font-mono text-indigo-300 bg-indigo-900/50 px-2 py-1 rounded border border-indigo-700/50">
-              {Math.round(scene.talking_head_framing.confidence * 100)}% Detection Confidence
-            </span>
+      {/* 3. MOTION */}
+      <div className="space-y-2 pt-2 border-t border-border">
+        <div className="flex items-center justify-between">
+          <div className="alco-section-label !mb-0">
+            <Move className="w-3.5 h-3.5 text-primary" />
+            <span>Motion Camera</span>
           </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-            <div className="bg-slate-950/60 p-2 rounded-lg border border-indigo-900/40">
-              <span className="text-[9px] text-slate-400 block font-semibold uppercase flex items-center gap-1">
-                <Eye className="w-3 h-3 text-emerald-400" /> Eyeline Alignment
-              </span>
-              <span className="font-bold text-emerald-300 font-mono">
-                Upper 1/3 ({scene.talking_head_framing.eyeline_y_percent}%)
-              </span>
-            </div>
-
-            <div className="bg-slate-950/60 p-2 rounded-lg border border-indigo-900/40">
-              <span className="text-[9px] text-slate-400 block font-semibold uppercase flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-indigo-400" /> Headroom Protection
-              </span>
-              <span className="font-bold text-indigo-200 font-mono">
-                {scene.talking_head_framing.headroom_percent}% Headroom Buffer
-              </span>
-            </div>
-
-            <div className="bg-slate-950/60 p-2 rounded-lg border border-indigo-900/40">
-              <span className="text-[9px] text-slate-400 block font-semibold uppercase flex items-center gap-1">
-                <Move className="w-3 h-3 text-amber-400" /> Smart Reframe Scale
-              </span>
-              <span className="font-bold text-amber-300 font-mono">
-                {scene.talking_head_framing.smart_reframe_scale}x (Face Safe)
-              </span>
-            </div>
-
-            <div className="bg-slate-950/60 p-2 rounded-lg border border-indigo-900/40">
-              <span className="text-[9px] text-slate-400 block font-semibold uppercase flex items-center gap-1">
-                <Sliders className="w-3 h-3 text-rose-400" /> Framing Mode
-              </span>
-              <span className="font-bold text-slate-200 capitalize truncate block">
-                {scene.talking_head_framing.framing_mode.replace('_', ' ')}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Visual Quality & Lighting Correction Card */}
-      {scene.visual_correction && (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 text-white space-y-2 text-xs">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
-                <Sun className="w-3.5 h-3.5" />
-              </span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-slate-100">Lighting & Visual Quality Correction</span>
-                  <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase bg-cyan-950 text-cyan-300 border border-cyan-700/60">
-                    {scene.visual_correction.status.replace(/_/g, ' ')}
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-300">{scene.visual_correction.note}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
-            <div className="bg-slate-950/60 p-2 rounded-lg border border-slate-800">
-              <span className="text-[9px] text-slate-400 block font-semibold uppercase">Brightness / Fill Light</span>
-              <span className="font-bold text-amber-300 font-mono">{scene.visual_correction.brightness}%</span>
-            </div>
-            <div className="bg-slate-950/60 p-2 rounded-lg border border-slate-800">
-              <span className="text-[9px] text-slate-400 block font-semibold uppercase">Contrast Clarity</span>
-              <span className="font-bold text-cyan-300 font-mono">{scene.visual_correction.contrast}%</span>
-            </div>
-            <div className="bg-slate-950/60 p-2 rounded-lg border border-slate-800">
-              <span className="text-[9px] text-slate-400 block font-semibold uppercase">Skin Warmth / Saturation</span>
-              <span className="font-bold text-emerald-300 font-mono">{scene.visual_correction.saturate}%</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left Column: Role & Motion Presets */}
-        <div className="space-y-4">
-          {/* Content Role */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-indigo-600" />
-              Content Role:
-            </label>
-            <div className="grid grid-cols-3 gap-1.5">
-              {ROLE_OPTIONS.map((role) => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => handleRoleChange(role)}
-                  className={`py-1.5 px-2 rounded-lg text-xs font-semibold uppercase transition-all cursor-pointer ${
-                    scene.role === role
-                      ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-xs'
-                      : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 6 Motion Presets Selection */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <Move className="w-3.5 h-3.5 text-indigo-600" />
-                Motion Camera Preset (6 Presets):
-              </label>
-              <span className="text-[11px] font-mono text-slate-500">
-                Scale: {scene.motion_scale?.toFixed(2) || '1.15'}x
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {MOTION_OPTIONS.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => handleMotionChange(opt.id)}
-                  className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                    scene.motion === opt.id
-                      ? 'border-indigo-500 bg-indigo-50/60 text-slate-900 shadow-xs ring-1 ring-indigo-500'
-                      : 'border-slate-200 bg-slate-50/50 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  <div className="text-[11px] font-bold text-slate-800">{opt.label}</div>
-                  <div className="text-[9px] text-slate-500 line-clamp-1">{opt.desc}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Sound Effect & Transition */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  <Volume2 className="w-3.5 h-3.5 text-slate-500" /> Sound FX:
-                </label>
-                {scene.sound_effect !== 'none' && (
-                  <button
-                    type="button"
-                    onClick={() => playSoundEffect(scene.sound_effect, 0.5)}
-                    className="text-[10px] text-indigo-600 hover:text-indigo-700 font-bold flex items-center gap-0.5 cursor-pointer"
-                  >
-                    <Play className="w-2.5 h-2.5" /> Test
-                  </button>
-                )}
-              </div>
-              <select
-                value={scene.sound_effect}
-                onChange={(e) => handleSoundEffectChange(e.target.value as SoundEffectType)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="none">None</option>
-                <option value="whoosh">Whoosh (Fast Swipe)</option>
-                <option value="pop">Pop (Punch Snap)</option>
-                <option value="ding">Ding (Success/Proof)</option>
-                <option value="camera_shutter">Camera Shutter</option>
-              </select>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-700">Transition:</label>
-              <select
-                value={scene.transition}
-                onChange={(e) => onUpdateScene({ ...scene, transition: e.target.value as any })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="cut">Hard Cut</option>
-                <option value="flash">Impact Flash</option>
-                <option value="whip_pan">Whip Pan</option>
-                <option value="zoom_cut">Zoom Cut</option>
-              </select>
-            </div>
-          </div>
+          <span className="font-mono text-[11px] text-muted-foreground">
+            Scale: {scene.motion_scale?.toFixed(2) || '1.15'}x
+          </span>
         </div>
 
-        {/* Right Column: Captions, Visual Intent & B-Roll */}
-        <div className="space-y-4">
-          {/* Caption Text & Style */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <Type className="w-3.5 h-3.5 text-indigo-600" /> Caption Text & Mode:
-              </label>
-              {/* Caption Modes (Verbatim / Punchy / Summary) */}
-              <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[10px]">
-                {(['verbatim', 'punchy', 'summary'] as CaptionMode[]).map((mode) => (
-                  <button
-                    key={mode}
-                    type="button"
-                    onClick={() => handleCaptionModeChange(mode)}
-                    className={`px-2 py-0.5 rounded font-bold capitalize cursor-pointer ${
-                      scene.caption_mode === mode
-                        ? 'bg-white text-indigo-600 shadow-xs'
-                        : 'text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    {mode}
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+          {MOTION_OPTIONS.map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              onClick={() => handleMotionChange(opt.id)}
+              className={`p-2 rounded border text-left transition-all cursor-pointer ${
+                scene.motion === opt.id
+                  ? 'border-primary bg-primary/10 text-foreground shadow-xs'
+                  : 'border-border bg-card text-muted-foreground hover:bg-secondary'
+              }`}
+            >
+              <div className="text-[11px] font-bold leading-tight">{opt.label}</div>
+              <div className="text-[9px] text-muted-foreground truncate">{opt.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
 
+      {/* 4. B-ROLL */}
+      <div className="space-y-2 pt-2 border-t border-border">
+        <div className="flex items-center justify-between">
+          <div className="alco-section-label !mb-0">
+            <Layers className="w-3.5 h-3.5 text-primary" />
+            <span>B-Roll Overlay</span>
+          </div>
+          {scene.broll && (
+            <button
+              type="button"
+              onClick={() => onUpdateScene({ ...scene, broll: null, visual_intent: 'none' })}
+              className="flex items-center gap-1 text-[10px] font-semibold text-rose-500 hover:text-rose-600 cursor-pointer"
+            >
+              <Trash2 className="w-3 h-3" /> Hapus B-roll
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <select
+            value={scene.visual_intent || 'none'}
+            onChange={(e) => handleVisualIntentChange(e.target.value as VisualIntent)}
+            className="rounded border border-border bg-secondary px-2.5 py-1.5 text-xs text-foreground focus:border-primary focus:outline-none"
+          >
+            {VISUAL_INTENTS.map((intent) => (
+              <option key={intent.id} value={intent.id}>
+                {intent.label}
+              </option>
+            ))}
+          </select>
+
+          <button
+            type="button"
+            onClick={() => setShowStockPicker(!showStockPicker)}
+            className="flex items-center justify-center gap-1.5 rounded border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
+          >
+            <Video className="w-3.5 h-3.5 text-primary" />
+            <span>Stock Library</span>
+          </button>
+        </div>
+
+        {/* Toggleable Stock Catalog Picker */}
+        {showStockPicker && (
+          <div className="rounded-lg border border-border bg-card p-3 space-y-2 shadow-sm animate-fade-in">
             <input
               type="text"
-              value={scene.caption}
-              onChange={(e) => handleCaptionTextChange(e.target.value)}
-              placeholder="Caption text on screen..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase"
+              value={stockSearchFilter}
+              onChange={(e) => setStockSearchFilter(e.target.value)}
+              placeholder="Cari stock b-roll..."
+              className="w-full rounded border border-border bg-secondary px-2.5 py-1 text-xs text-foreground focus:border-primary focus:outline-none"
             />
-
-            {/* 3 Caption Styles */}
-            <div className="grid grid-cols-3 gap-1.5">
-              {CAPTION_OPTIONS.map((cOpt) => (
+            <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
+              {filteredCatalog.map((item, i) => (
                 <button
-                  key={cOpt.id}
+                  key={i}
                   type="button"
-                  onClick={() => handleCaptionStyleChange(cOpt.id)}
-                  className={`py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all text-center cursor-pointer ${
-                    scene.caption_style === cOpt.id
-                      ? 'bg-amber-50 text-amber-800 border border-amber-300 shadow-xs'
-                      : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                  }`}
+                  onClick={() => {
+                    onUpdateScene({
+                      ...scene,
+                      visual_intent: item.intent,
+                      broll: {
+                        query: item.title,
+                        title: item.title,
+                        sourceUrl: item.url,
+                        previewUrl: item.thumb,
+                        mediaType: item.type,
+                        visual_intent: item.intent,
+                        overlay_style: item.suggestedFraming || 'pip',
+                        opacity: 0.95,
+                      },
+                    });
+                    setShowStockPicker(false);
+                  }}
+                  className="rounded border border-border p-1 bg-secondary/50 text-left hover:border-primary transition-all cursor-pointer"
                 >
-                  {cOpt.label}
+                  <img
+                    src={item.thumb}
+                    alt={item.title}
+                    className="w-full aspect-video object-cover rounded"
+                  />
+                  <span className="block truncate text-[9px] font-bold text-foreground mt-0.5">
+                    {item.title}
+                  </span>
                 </button>
               ))}
             </div>
-
-            {/* Caption Display Mode */}
-            <div className="space-y-1">
-              <label className="text-[11px] text-slate-500 font-medium">Caption Layout & Display Mode:</label>
-              <div className="grid grid-cols-2 gap-1.5">
-                {[
-                  { id: 'clean_floating', label: 'Clean Floating' },
-                  { id: 'hook_headline', label: 'Hook Headline' },
-                  { id: 'proof_badge', label: 'Proof Badge Box' },
-                  { id: 'cta_emphasis', label: 'CTA Emphasis' },
-                ].map((mode) => (
-                  <button
-                    key={mode.id}
-                    type="button"
-                    onClick={() => onUpdateScene(scene.id, { caption_display_mode: mode.id as CaptionDisplayMode })}
-                    className={`py-1 px-2 rounded-lg text-[10px] font-semibold transition-all text-center cursor-pointer ${
-                      (scene.caption_display_mode || 'clean_floating') === mode.id
-                        ? 'bg-indigo-50 text-indigo-700 border border-indigo-300 font-bold'
-                        : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    {mode.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Highlighted Words input */}
-            <div className="space-y-1">
-              <label className="text-[11px] text-slate-500 font-medium">
-                Highlighted Words (comma separated):
-              </label>
-              <input
-                type="text"
-                value={(scene.highlight_words || []).join(', ')}
-                onChange={(e) => handleHighlightWordsChange(e.target.value)}
-                placeholder="SALAH, PRODUK, CEPAT"
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-amber-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
           </div>
+        )}
+      </div>
 
-          {/* Visual Intent & B-Roll Framing */}
-          <div className="space-y-2 pt-2 border-t border-slate-100">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-indigo-600" /> Visual Intent:
-              </label>
-              {scene.broll && (
-                <button
-                  onClick={() => onUpdateScene({ ...scene, broll: null, visual_intent: 'none' })}
-                  className="text-[11px] text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer font-medium"
-                >
-                  <Trash2 className="w-3 h-3" /> Remove B-roll
-                </button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <select
-                value={scene.visual_intent || 'none'}
-                onChange={(e) => handleVisualIntentChange(e.target.value as VisualIntent)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                {VISUAL_INTENTS.map((intent) => (
-                  <option key={intent.id} value={intent.id}>
-                    {intent.label}
-                  </option>
-                ))}
-              </select>
-
+      {/* 5. TRANSITION & SOUND */}
+      <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border">
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase text-muted-foreground">Sound FX:</span>
+            {scene.sound_effect !== 'none' && (
               <button
                 type="button"
-                onClick={() => setShowStockPicker(!showStockPicker)}
-                className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg border border-indigo-200 cursor-pointer flex items-center justify-center gap-1"
+                onClick={() => playSoundEffect(scene.sound_effect, 0.5)}
+                className="flex items-center gap-0.5 text-[10px] font-bold text-primary hover:underline cursor-pointer"
               >
-                <Video className="w-3.5 h-3.5" />
-                <span>Stock Library</span>
+                <Play className="w-2.5 h-2.5" /> Test
               </button>
-            </div>
-
-            {/* Curated Extended Stock Picker */}
-            {showStockPicker && (
-              <div className="bg-white border border-slate-200 rounded-xl p-3 space-y-2 shadow-lg animate-fade-in">
-                <input
-                  type="text"
-                  value={stockSearchFilter}
-                  onChange={(e) => setStockSearchFilter(e.target.value)}
-                  placeholder="Cari stock b-roll (contoh: sales, frustration, mobile)..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-
-                <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto pr-1">
-                  {filteredCatalog.map((item, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => {
-                        onUpdateScene({
-                          ...scene,
-                          visual_intent: item.intent,
-                          broll: {
-                            query: item.title,
-                            title: item.title,
-                            sourceUrl: item.url,
-                            previewUrl: item.thumb,
-                            mediaType: item.type,
-                            visual_intent: item.intent,
-                            overlay_style: item.suggestedFraming || 'pip',
-                            opacity: 0.95,
-                          },
-                        });
-                        setShowStockPicker(false);
-                      }}
-                      className="p-1 rounded-lg border border-slate-200 hover:border-indigo-500 bg-slate-50 text-left text-[9px] text-slate-700 space-y-1 cursor-pointer hover:bg-indigo-50/40 transition-all"
-                    >
-                      <img
-                        src={item.thumb}
-                        alt={item.title}
-                        className="w-full aspect-video object-cover rounded"
-                      />
-                      <span className="block truncate font-bold">{item.title}</span>
-                      <span className="text-[8px] text-indigo-600 block">{item.intent}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
             )}
           </div>
+          <select
+            value={scene.sound_effect}
+            onChange={(e) => handleSoundEffectChange(e.target.value as SoundEffectType)}
+            className="w-full rounded border border-border bg-secondary px-2 py-1.5 text-xs text-foreground focus:border-primary focus:outline-none"
+          >
+            <option value="none">None</option>
+            <option value="whoosh">Whoosh (Fast Swipe)</option>
+            <option value="pop">Pop (Punch Snap)</option>
+            <option value="ding">Ding (Success/Proof)</option>
+            <option value="camera_shutter">Camera Shutter</option>
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <span className="text-[10px] font-bold uppercase text-muted-foreground">Transition:</span>
+          <select
+            value={scene.transition}
+            onChange={(e) => onUpdateScene({ ...scene, transition: e.target.value as any })}
+            className="w-full rounded border border-border bg-secondary px-2 py-1.5 text-xs text-foreground focus:border-primary focus:outline-none"
+          >
+            <option value="cut">Hard Cut</option>
+            <option value="flash">Impact Flash</option>
+            <option value="whip_pan">Whip Pan</option>
+            <option value="zoom_cut">Zoom Cut</option>
+          </select>
         </div>
       </div>
 
-      {/* AI Scene Regenerator Section */}
-      <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-        <div className="flex-1">
+      {/* 6. AI RECOMMENDATION */}
+      <div className="space-y-2 pt-2 border-t border-border">
+        <div className="alco-section-label">
+          <Sparkles className="w-3.5 h-3.5 text-primary" />
+          <span>AI Recommendation & Fine-tuning</span>
+        </div>
+
+        {scene.director_note && (
+          <p className="rounded border border-border bg-secondary/50 p-2 text-[11px] italic text-muted-foreground">
+            "{scene.director_note}"
+          </p>
+        )}
+
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <input
             type="text"
             value={customAiPrompt}
             onChange={(e) => setCustomAiPrompt(e.target.value)}
-            placeholder="AI instruction: Increase hook energy / make punch zoom faster..."
-            className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Instruksi AI: Tingkatkan intensitas zoom, persingkat caption..."
+            className="flex-1 rounded border border-border bg-secondary px-3 py-1.5 text-xs text-foreground focus:border-primary focus:outline-none"
           />
+          <button
+            type="button"
+            disabled={isRegenerating}
+            onClick={handleRegenClick}
+            className="flex shrink-0 items-center justify-center gap-1.5 rounded bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground hover:bg-primary/95 transition-colors cursor-pointer disabled:opacity-50"
+          >
+            {isRegenerating ? (
+              <>
+                <RefreshCw className="w-3 h-3 animate-spin" />
+                <span>Memproses...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-3 h-3" />
+                <span>Regenerate Scene</span>
+              </>
+            )}
+          </button>
         </div>
-
-        <button
-          type="button"
-          disabled={isRegenerating}
-          onClick={handleRegenClick}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
-        >
-          {isRegenerating ? (
-            <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              <span>Regenerating...</span>
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Regenerate Scene</span>
-            </>
-          )}
-        </button>
       </div>
     </div>
   );
