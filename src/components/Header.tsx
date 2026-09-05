@@ -21,10 +21,12 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('alco_theme') as ThemeMode;
-      if (saved === 'light' || saved === 'dark' || saved === 'system') {
-        return saved;
-      }
+      try {
+        const saved = localStorage.getItem('alco_theme') as ThemeMode;
+        if (saved === 'light' || saved === 'dark' || saved === 'system') {
+          return saved;
+        }
+      } catch {}
       return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
     }
     return 'light';
@@ -44,7 +46,9 @@ export const Header: React.FC<HeaderProps> = ({
       } else {
         document.documentElement.classList.remove('dark');
       }
-      localStorage.setItem('alco_theme', mode);
+      try {
+        localStorage.setItem('alco_theme', mode);
+      } catch {}
     };
 
     applyTheme(theme);
@@ -52,15 +56,21 @@ export const Header: React.FC<HeaderProps> = ({
     // If system mode, listen for system preference changes
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const listener = (e: MediaQueryListEvent) => {
-        if (e.matches) {
+      const listener = (e: MediaQueryListEvent | MediaQueryList) => {
+        const isSystemDark = 'matches' in e ? e.matches : (e as any).matches;
+        if (isSystemDark) {
           document.documentElement.classList.add('dark');
         } else {
           document.documentElement.classList.remove('dark');
         }
       };
-      mediaQuery.addEventListener('change', listener);
-      return () => mediaQuery.removeEventListener('change', listener);
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', listener as EventListener);
+        return () => mediaQuery.removeEventListener('change', listener as EventListener);
+      } else if ((mediaQuery as any).addListener) {
+        (mediaQuery as any).addListener(listener);
+        return () => (mediaQuery as any).removeListener(listener);
+      }
     }
   }, [theme]);
 

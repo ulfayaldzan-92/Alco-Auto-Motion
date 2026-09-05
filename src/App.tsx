@@ -34,6 +34,9 @@ export default function App() {
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
     try {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        return true;
+      }
       return localStorage.getItem('alco_sidebar_collapsed') === 'true';
     } catch {
       return false;
@@ -44,7 +47,9 @@ export default function App() {
     setIsSidebarCollapsed((prev) => {
       const next = !prev;
       try {
-        localStorage.setItem('alco_sidebar_collapsed', String(next));
+        if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+          localStorage.setItem('alco_sidebar_collapsed', String(next));
+        }
       } catch {}
       return next;
     });
@@ -167,14 +172,11 @@ export default function App() {
       {/* Main Workspace Area: Sticky Top Header + Scrollable Content */}
       <div className="flex flex-1 flex-col min-w-0 h-full overflow-hidden">
         <Header
-          activeTab={activeTab}
-          onSelectTab={setActiveTab}
           hasPlan={!!project}
           isProcessing={processingState.isProcessing}
           onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
           onOpenExportModal={project ? () => setIsExportModalOpen(true) : undefined}
           onToggleSidebar={handleToggleSidebar}
-          isSidebarCollapsed={isSidebarCollapsed}
         />
 
         {/* Real-time Multi-Step AI Processing Modal */}
